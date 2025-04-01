@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DEPLOY_DIR = '/home/alumno/Documentos/Usuarios/practica9/Testing-React-Redux-with-Jest-and-Enzyme'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    // Clonar el código en la rama feature actual
+                    git branch: env.BRANCH_NAME, url: 'https://github.com/munoz138255/Testing-React-Redux-with-Jest-and-Enzyme.git'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    echo "Construyendo proyecto en la rama ${env.BRANCH_NAME}"
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Testing') {
+            steps {
+                script {
+                    echo "Ejecutando pruebas en la rama ${env.BRANCH_NAME}"
+                    sh 'npm test'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline CI ejecutado correctamente en la rama feature.'
+        }
+        failure {
+            echo 'Hubo un error en la ejecución del pipeline CI.'
+        }
+    }
+}
