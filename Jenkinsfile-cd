@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    environment {
+        DEPLOY_DIR = '/home/alumno/Documentos/Usuarios/practica9/Testing-React-Redux-with-Jest-and-Enzyme'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    // Clonar el código de la rama master
+                    git branch: 'master', url: 'https://github.com/munoz138255/Testing-React-Redux-with-Jest-and-Enzyme.git'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    echo "Desplegando proyecto en la rama master"
+                    sh """
+                        cd ${DEPLOY_DIR}
+                        git pull origin master  # Traer los últimos cambios
+                        npm install  # Instalar dependencias si es necesario
+                        npm run build  # Compilar la aplicación
+                        echo 'Despliegue completado con éxito dentro del contenedor'
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline CD ejecutado correctamente en la rama master.'
+        }
+        failure {
+            echo 'Hubo un error en la ejecución del pipeline CD.'
+        }
+    }
+}
