@@ -7,7 +7,7 @@ class ListItem extends Component {
         const { title, desc } = this.props;
 
         if(!title){
-            console.log("No hay título");
+            console.log("No  hay título");
             return null;
         }
 
